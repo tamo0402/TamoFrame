@@ -1,4 +1,4 @@
-## frame
+## Tamo Frame
 
 オレオレフレームワーク
 

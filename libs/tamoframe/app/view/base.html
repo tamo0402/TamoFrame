@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>{{title}}</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<link rel="shortcut icon" href="favicon.ico">
+<base href="site url">
+<style type="text/css" media="all">
+@import url("css/import.css");
+</style>
+<!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+</head>
+<body>
+
+    <!-- header start -->
+    <div id="header_container">
+        <header id="header">
+            <h1>Tamo Frame</h1>
+        </header>
+    </div><br /><br /><br /><br />
+    <!-- header end -->
+
+
+    <!-- contents start -->
+    <div id="main_container">
+        {% block main %}{% endblock %}
+    </div><br /><br /><br /><br />
+    <!-- contents end -->
+
+
+    <!-- footer start -->
+    <div id="footer_container">
+        <footer id="footer">
+            Copyright &copy; 2012-2013 All Rights Reserved.
+        </footer>
+    </div>
+    <!-- footer end -->
+
+</body>
+</html>
