@@ -1,10 +1,10 @@
 <?php
 
 /**
- * Tamo Frame - index.php -
+ * Tamo Frame - request.php -
  *
  * すべてのリクエストで実行される。
- * パスの設定とか。
+ * リクエストURLのクラスを実行する。
  *
  * @version    1.0
  * @author     tamo
