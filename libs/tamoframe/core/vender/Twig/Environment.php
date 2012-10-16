@@ -17,7 +17,7 @@
  */
 class Twig_Environment
 {
-    const VERSION = '1.10.0';
+    const VERSION = '1.10.1';
 
     protected $charset;
     protected $loader;
@@ -357,7 +357,6 @@ class Twig_Environment
     {
         foreach ($this->extensions as $extension) {
             $r = new ReflectionObject($extension);
-            print_r($r->getFileName());
             if (filemtime($r->getFileName()) > $time) {
                 return false;
             }
