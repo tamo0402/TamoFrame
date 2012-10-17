@@ -18,7 +18,18 @@ namespace Tamo\Core;
 
 class config {
 
+	private $config;
+
 	public function __construct() {
-		echo "Core!!";
+		$this->config = $this->getConfig();
+	}
+
+	private function getConfig() {
+		// 設定。
+
+	}
+
+	public static function get() {
+		return $this->config;
 	}
 }
