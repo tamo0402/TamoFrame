@@ -45,7 +45,7 @@ class AutoLoader {
         foreach ($this->dirs as $dir) {
 			$parts = explode('\\', $classname);
 			$fileName = str_replace("_action", "", end($parts));
-			$file = $dir .  $fileName . '.php';
+			$file = $dir . $fileName . '.php';
             if(is_readable($file)) {
                 require $file;
                 if (count($parts) == 1) {
