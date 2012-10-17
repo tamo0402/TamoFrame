@@ -23,19 +23,59 @@ class action {
 
     /**
      * 子クラスのコンストラクタから呼び出す。
+     * ここには自動的に毎回処理(初期設定)の内容を書く
+     * TODO Coreのほうにいじられたくない処理を書いて継承させようかな。
      */
     public function __construct() {
 
-        // ここには自動的に毎回処理する内容を書く。
+        // クリックジャギング対策。
+        header('X-FRAME-OPTIONS: SAMEORIGIN');
 
 
-        // TODO View使うエンジンごとに分ける。
+        // コンフィグ取得。
+        //$this->conf = new config;
+        //$this->conf = config::get();
+
+
+        // PDOコネクションを用意する。
+        \db::connection();
+
+
+        // viewのエンジン取得。
         if (true) {
             //$this->view = new \TamoFrame\App\Lib\smarty();
 
             $myobj = new \TamoFrame\App\Lib\twig();
             $this->view = $myobj->getTwig();
         }
+
+
+        /**
+         * セッションクラス。
+         */
+
+
+        /**
+         * 現在のモードを反映。
+         * 1:運用中 2:デバッグ中 3:工事中
+         */
+
+
+        /**
+         * エラー系を扱うクラスのオブジェクト。
+         */
+
+
+        /**
+         * loadクラス
+         * パスを追加する。
+         * alwaysload的なもん？
+         */
+        //set_include_path(get_include_path() . PATH_SEPARATOR . $path);
+
+
+        // logに書き込み。
+
 
         // 最後に子クラスのbeforを呼び出す。
         $this->befor();
@@ -70,17 +110,17 @@ class action {
 
     public function response() {
 
-    	try {
-	        // twig OR smarty
-    	    if (true) {
-        	    $template = $this->view->loadTemplate($this->viewName);
-            	echo $template->render($this->assignList);
-        	} else {
-            	$this->view->display($this->viewName);
-        	}
+        try {
+            // twig OR smarty
+            if (true) {
+                $template = $this->view->loadTemplate($this->viewName);
+                echo $template->render($this->assignList);
+            } else {
+                $this->view->display($this->viewName);
+            }
         } catch (Exception $e) {
-			echo $e;
-		}
+            echo $e;
+        }
     }
 
 
