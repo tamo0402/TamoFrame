@@ -78,7 +78,8 @@ class action {
 
 
         // 最後に子クラスのbeforを呼び出す。
-        $this->befor();
+        // staticでできる？遅延静的束縛というみたい。
+        // static::befor();
     }
 
 
@@ -140,7 +141,7 @@ class action {
 
         // ここには終了時に自動的に行う処理を書く。
 
-        // afterを呼び出す。
+        // static::afterを呼び出す。
     }
 
 
