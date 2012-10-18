@@ -33,7 +33,7 @@ class errors {
 	/**
 	 * エラーを配列にセットする。
 	 */
-	public function setErrors($err) {
+	public static function setErrors($err) {
 		$this->errors[] = $err;
 	}
 
@@ -41,7 +41,7 @@ class errors {
 	/**
 	 * セットしたエラーを取得する。
 	 */
-	public function getErrors() {
+	public static function getErrors() {
 		return $this->errors;
 	}
 
@@ -49,7 +49,7 @@ class errors {
 	/**
 	 * セットしたエラーをリセットする。
 	 */
-	public function resetErrors() {
+	public static function resetErrors() {
 	    $this->errors = array();
 	}
 }

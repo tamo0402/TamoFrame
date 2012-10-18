@@ -16,7 +16,7 @@ class session {
 	/**
 	 * コンストラクタでセッション開始。
 	 */
-	function __construct() {
+	public function __construct() {
 		session_start();
 	}
 
@@ -27,7 +27,7 @@ class session {
 	 * 引数のセッション名のセッションを消す。
 	 * 引数なければすべて。
 	 */
-	function logout($sessionName=null) {
+	public function logout($sessionName=null) {
 
 		if (is_null($sessionName)) {
 

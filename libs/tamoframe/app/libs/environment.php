@@ -24,6 +24,10 @@ class environment {
     private $env;
 
 
+    /**
+     * コンストラクタ。
+     * @param $env
+     */
     public function __construct($env) {
         $this->env = $env;
         $this->setFinalEnv();
@@ -51,5 +55,14 @@ class environment {
         else if ($this->env == self::$develop) {}
         else if ($this->env == self::$test) {}
         else if ($this->env == self::$mentenance){}
+    }
+
+
+
+    /**
+     * 現在の環境を取得。
+     */
+    public function getEnv() {
+        return $this->env;
     }
 }

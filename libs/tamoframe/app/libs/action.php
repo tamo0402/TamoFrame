@@ -25,29 +25,30 @@ class action {
     /**
      * 子クラスのコンストラクタから呼び出す。
      * ここには自動的に毎回処理(初期設定)の内容を書く
-     * TODO Coreのほうにいじられたくない処理を書いて継承させようかな。
      */
     public function __construct() {
 
-        // クリックジャギング対策。
+        /**
+         * クリックジャギング対策。
+         */
         header('X-FRAME-OPTIONS: SAMEORIGIN');
 
 
-        // コンフィグ取得。
-        //$this->conf = new config;
-        //$this->conf = config::get();
-
-
-        // PDOコネクションを用意する。
+        /**
+         * PDOコネクションを用意する。
+         */
         \db::connection();
 
 
-        // viewのエンジン取得。
-        if (true) {
-            //$this->view = new \TamoFrame\App\Lib\smarty();
+        /**
+         * viewクラス。
+         */
+        if (\config::get("view") == "Twig") {
+            $twig = new \TamoFrame\App\Lib\twig();
+            $this->view = $twig->getTwig();
 
-            $myobj = new \TamoFrame\App\Lib\twig();
-            $this->view = $myobj->getTwig();
+        } else if (\config::get("view") == "Smarty") {
+            $this->view = new \TamoFrame\App\Lib\smarty();
         }
 
 
@@ -60,7 +61,7 @@ class action {
         /**
          * 現在の環境を設定。
          */
-        $modeObj = new \environment(\environment::$develop);
+        $modeObj = new \environment(\config::get("status"));
 
 
         /**
@@ -76,7 +77,12 @@ class action {
         //set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 
 
-        // logクラス。
+        /**
+         * logクラス。
+         */
+        if ("none" != \config::get("log")) {
+            $logObj = new log();
+        }
 
 
         // 最後に子クラスのbeforを呼び出す。
@@ -112,15 +118,15 @@ class action {
     public function response() {
 
         try {
-            // twig OR smarty
-            if (true) {
+            if ("Twig" == \config::get("view")) {
                 $template = $this->view->loadTemplate($this->viewName);
                 echo $template->render($this->assignList);
-            } else {
+            } else if ("Smarty" == \config::get("view")) {
                 $this->view->display($this->viewName);
             }
+
         } catch (Exception $e) {
-            echo $e;
+            echo nl2br($e);
         }
     }
 
@@ -132,20 +138,40 @@ class action {
      */
     public function assign($key, $value) {
 
-        // twig OR smarty
-        if (true) {
+        if ("Twig" == \config::get("view")) {
             $this->twigAssign($key, $value);
-        } else {
+            return;
+        } else if ("Smarty" == \config::get("view")) {
             $this->smartyAssign($key, $value);
+            return;
         }
     }
+
+
+    /**
+     * Twig使用時viewに変数登録。
+     * @param $key
+     * @param $value
+     */
     private function twigAssign($key, $value) {
         $this->assignList[$key] = $value;
     }
+
+
+    /**
+     * Smarty使用時viewに変数登録。
+     * @param $key
+     * @param $value
+     */
     private function smartyAssign($key, $value) {
         $this->view->assign($key, $value);
     }
 
+
+    /**
+     * view名をセットする。
+     * @param unknown $viewName
+     */
     public function viewSet($viewName) {
         $this->viewName = $viewName;
     }
