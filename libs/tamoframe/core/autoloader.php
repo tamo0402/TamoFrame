@@ -42,15 +42,22 @@ class AutoLoader {
      * @param string $classname
      */
     public function loader($classname) {
+
+        // TwigのオートローダーとかぶるのでTwigの場合は処理しない。
+        if (0 === strpos($classname, 'Twig')) {
+            return;
+        }
+
+        // 順番にファイルを探す。
         foreach ($this->dirs as $dir) {
-			$parts = explode('\\', $classname);
-			$fileName = str_replace("_action", "", end($parts));
-			$file = $dir . $fileName . '.php';
+            $parts = explode('\\', $classname);
+            $fileName = str_replace("_action", "", end($parts));
+            $file = $dir . $fileName . '.php';
+
+            // ファイルがあれば読み込む。
             if(is_readable($file)) {
-                require $file;
-                if (count($parts) == 1) {
-	                return;
-                }
+                require_once $file;
+                return;
             }
         }
     }

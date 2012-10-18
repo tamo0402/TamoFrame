@@ -40,8 +40,7 @@ class request {
             return $this->call();
 
         } catch (Exception $e) {
-            echo "error!!";
-            echo $e;
+            echo nl2br($e);
         }
     }
 
