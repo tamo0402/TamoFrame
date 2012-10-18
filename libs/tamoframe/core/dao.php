@@ -1,4 +1,18 @@
 <?php
+
+/**
+ * Tamo Frame - dao.php -
+ *
+ * DAOクラス。
+ * クエリを実行するクラス。
+ * Modelから継承して使用する。
+ *
+ * @version    1.0
+ * @author     tamo
+ * @license    MIT License
+ * @copyright  2012 tamo All Rights Reserved.
+ * @link       http://tamo3.info
+ */
 namespace TamoFrame\Core;
 
 class dao {

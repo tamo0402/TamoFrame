@@ -12,6 +12,9 @@ class index_action extends \TamoFrame\App\Lib\action {
         parent::__construct();
     }
 
+    /**
+     * indexが呼ばれた時。
+     */
     public function index() {
 
         // DB操作する時。

@@ -46,8 +46,9 @@ class AutoLoader {
             $parts = explode('\\', $classname);
             $fileName = str_replace("_action", "", end($parts));
             $file = $dir . $fileName . '.php';
+            echo $file,"<br>";
             if(is_readable($file)) {
-                require $file;
+                require_once $file;
                 if (count($parts) == 1) {
                     return;
                 }

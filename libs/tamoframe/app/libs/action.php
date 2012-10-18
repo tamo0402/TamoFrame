@@ -1,11 +1,10 @@
 <?php
 
 /**
- * Tamo Frame - tamoframe.php -
+ * Tamo Frame - action.php -
  *
- * すべてのクラスで実行されるベースの処理。
- * よくあるなんとかアクション的なクラスの予定。
- * DBのコネクションとか初期設定する感じかな？
+ * アクションベースクラス。
+ * アクションから継承させて使う。
  *
  * @version    1.0
  * @author     tamo
@@ -20,6 +19,8 @@ class action {
     public $view;
     private $viewName;
     private $assignList = array();
+    protected $sessionObj;
+
 
     /**
      * 子クラスのコンストラクタから呼び出す。
@@ -53,33 +54,74 @@ class action {
         /**
          * セッションクラス。
          */
+        $this->sessionObj = new \session();
 
 
         /**
-         * 現在のモードを反映。
-         * 1:運用中 2:デバッグ中 3:工事中
+         * 現在の環境を設定。
          */
+        $modeObj = new \environment(\environment::$develop);
 
 
         /**
          * エラー系を扱うクラスのオブジェクト。
          */
+        $errorObj = new \errors();
 
 
         /**
-         * loadクラス
+         * loadクラス。
          * パスを追加する。
-         * alwaysload的なもん？
          */
         //set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 
 
-        // logに書き込み。
+        // logクラス。
 
 
         // 最後に子クラスのbeforを呼び出す。
         // staticでできる？遅延静的束縛というみたい。
         // static::befor();
+    }
+
+
+    /**
+     * 終了する時の処理を書く。
+     */
+    public function __destruct() {
+        /* ここには終了時に自動的に行う処理を書く */
+        // 最後にafterを呼び出す。
+        // static::after();
+    }
+
+
+    /**
+     * 子クラスでオーバーライドして使う。
+     */
+    public function befor() {
+    }
+    public function after() {
+    }
+
+
+    /**
+     * レスポンスを返す。
+     * とゆーかviewファイルを読み込む。
+     * Twig OR Smarty OR 素PHP
+     */
+    public function response() {
+
+        try {
+            // twig OR smarty
+            if (true) {
+                $template = $this->view->loadTemplate($this->viewName);
+                echo $template->render($this->assignList);
+            } else {
+                $this->view->display($this->viewName);
+            }
+        } catch (Exception $e) {
+            echo $e;
+        }
     }
 
 
@@ -109,47 +151,41 @@ class action {
     }
 
 
-    public function response() {
+    /**
+     * トークン用にランダムな文字列を作成。
+     */
+    public function generate() {
+        return $_SESSION["syamrock"]["token"] = sha1(uniqid(mt_rand(), true));
+    }
 
-        try {
-            // twig OR smarty
-            if (true) {
-                $template = $this->view->loadTemplate($this->viewName);
-                echo $template->render($this->assignList);
-            } else {
-                $this->view->display($this->viewName);
-            }
-        } catch (Exception $e) {
-            echo $e;
+
+    /**
+     * トークンが一致しているかチェック。
+     */
+    public function checkToken($postToken) {
+        if ($_SESSION["syamrock"]["token"] === $postToken) {
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * ページリダイレクト。
+     */
+    public function gotoPage($url) {
+        if ($url != "") {
+            header("Location:" . $url);
+            exit();
         }
     }
 
 
     /**
-     * 子クラスでオーバーライドして使う。
+     * エラーページへリダイレクト。
      */
-    public function befor() {
-        // ここに直接は書かない。
-    }
-
-
-
-    /**
-     * 終了する時の処理を書く。
-     */
-    public function __destruct() {
-
-        // ここには終了時に自動的に行う処理を書く。
-
-        // static::afterを呼び出す。
-    }
-
-
-
-    /**
-     * 子クラスでオーバーライドして使う。
-     */
-    public function after() {
-        // ここに直接は書かない。
+    public function gotoError($errorFlg) {
+        $url = "error.php?flg={$errorFlg}";
+        $this->gotoPage($url);
     }
 }

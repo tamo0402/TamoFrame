@@ -13,12 +13,15 @@
  * @link       http://tamo3.info
  */
 
-namespace Tamo\App;
+return array(
 
-class config extends \Tamo\Core\config {
+    "key" => "value"
 
-	public function __construct() {
-		parent::__construct();
-		echo "App!!";
-	}
-}
+    // viewのエンジンどれ使うか。
+
+    // 現在のモードは？
+
+    // オリジナルlogを書きだすか。
+    // default noでいいな。
+
+);
