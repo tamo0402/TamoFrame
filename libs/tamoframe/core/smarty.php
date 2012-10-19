@@ -1,9 +1,11 @@
 <?php
-namespace TamoFrame\App\Lib;
+
+namespace TamoFrame\Core;
+
 
 require_once COREPATH . '/vender/smarty/Smarty.class.php';
 
-class smarty extends \Smarty {
+class Smarty extends \Smarty {
 
     private $templateDir;
     private $compileDir;
