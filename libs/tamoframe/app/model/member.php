@@ -6,7 +6,7 @@
  *
  */
 
-class member extends \TamoFrame\Core\dao {
+class Member extends \TamoFrame\Core\dao {
 
     private $allValue = array();
     private $id;

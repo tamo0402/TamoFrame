@@ -11,6 +11,9 @@
  * @copyright  2012 tamo All Rights Reserved.
  * @link       http://tamo3.info
  */
+namespace TamoFrame\Core;
+
+
 class session {
 
 	/**

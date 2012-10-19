@@ -1,6 +1,6 @@
 <?php
 
-class errors {
+class Errors {
 
     // エラー画面の種類。
 	public $ERROR_REGIST;
@@ -20,13 +20,14 @@ class errors {
 
 
 	/**
-	 * final
+	 * エラーの定数。
 	 */
 	private final function setErrorKeyword() {
-        $this->ERROR_REGIST = 1;
-        $this->ERROR_MAIL   = 2;
-        $this->ERROR_NODATA = 3;
-        $this->ERROR_SYSTEM = 99;
+
+	    $this->ERROR_REGIST = 1;  // 登録エラー。
+        $this->ERROR_MAIL   = 2;  // メールエラー。
+        $this->ERROR_NODATA = 3;  // データなしエラー。
+        $this->ERROR_SYSTEM = 99; // システムエラー。
 	}
 
 

@@ -3,7 +3,7 @@
 // Modelで使うファイルを読み込む。
 // require_once APPPATH . 'model/member.php';
 
-class index_action extends \TamoFrame\App\Lib\action {
+class Index_action extends Action {
 
     /**
      * 親クラスをnewする。

@@ -11,8 +11,10 @@
  * @copyright  2012 tamo All Rights Reserved.
  * @link       http://tamo3.info
  */
+namespace TamoFrame\Core;
 
-class error404_action extends \TamoFrame\App\Lib\action {
+
+class Error404_action extends Action {
 
 	public function __construct() {
 		parent::__construct();

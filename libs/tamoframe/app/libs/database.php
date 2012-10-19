@@ -13,11 +13,11 @@
  * @copyright  2012 tamo All Rights Reserved.
  * @link       http://tamo3.info
  */
-class database {
+class Database {
 
 	// DB接続に必要な情報を入れる。
     protected $serverName   = "localhost";
-    protected $serverId     = "id";
-    protected $serverPass   = "password";
-    protected $databaseName = "dbname";
+    protected $serverId     = "tamo";
+    protected $serverPass   = "tamo0402";
+    protected $databaseName = "tamo3";
 }

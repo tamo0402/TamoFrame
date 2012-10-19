@@ -12,9 +12,8 @@
  * @copyright  2012 tamo All Rights Reserved.
  * @link       http://tamo3.info
  */
-namespace TamoFrame\App\Lib;
 
-class action {
+class Action {
 
     public $view;
     private $viewName;
@@ -37,7 +36,7 @@ class action {
         /**
          * PDOコネクションを用意する。
          */
-        \db::connection();
+        \TamoFrame\Core\db::connection();
 
 
         /**

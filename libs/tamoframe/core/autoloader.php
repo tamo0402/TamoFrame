@@ -12,20 +12,27 @@
  * @copyright  2012 tamo All Rights Reserved.
  * @link       http://tamo3.info
  */
+namespace TamoFrame\Core;
+
 class AutoLoader {
 
 
     /**
      * 読み込むディレクトリ格納
      */
-    private $dirs = array(COREPATH, APPPATH, LIBPATH, SRCPATH);
+    private $dirs = array(COREPATH, LIBPATH, ACTIONPATH, MODELPATH);
 
 
     /**
      * コンストラクタ
      */
-    public function __construct() {
+    private function __construct() {
         spl_autoload_register(array($this, 'loader'));
+    }
+
+
+    public static function register() {
+        new self();
     }
 
 
@@ -50,13 +57,16 @@ class AutoLoader {
 
         // 順番にファイルを探す。
         foreach ($this->dirs as $dir) {
+
             $parts = explode('\\', $classname);
             $fileName = str_replace("_action", "", end($parts));
-            $file = $dir . $fileName . '.php';
+            $file = $dir . strtolower($fileName) . '.php';
+
+            echo $file, "<br>";
 
             // ファイルがあれば読み込む。
             if(is_readable($file)) {
-                require_once $file;
+                require $file;
                 return;
             }
         }

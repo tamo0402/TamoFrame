@@ -11,8 +11,10 @@
  * @copyright  2012 tamo All Rights Reserved.
  * @link       http://tamo3.info
  */
+namespace TamoFrame\Core;
 
-class environment {
+
+class Environment {
 
     // 環境の種類。
     public static $production = 1; // 本番環境。

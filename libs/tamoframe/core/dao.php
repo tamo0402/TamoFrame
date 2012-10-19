@@ -15,7 +15,7 @@
  */
 namespace TamoFrame\Core;
 
-class dao {
+class Dao {
 
     private $con;
     private $stmt;

@@ -1,9 +1,11 @@
 <?php
-namespace TamoFrame\App\Lib;
+
+namespace TamoFrame\Core;
+
 
 require_once COREPATH . '/vender/Twig/Autoloader.php';
 
-class twig {
+class Twig {
 
 	public $twig;
 
