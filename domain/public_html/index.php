@@ -29,30 +29,37 @@ define('DOCROOT', __DIR__.DIRECTORY_SEPARATOR);
 
 
 /**
- * applicationのパスをセット。
- */
-define('APPPATH', realpath(__DIR__.'/../../libs/tamoframe/app/').DIRECTORY_SEPARATOR);
-
-
-
-/**
- * applicationのlibsのパスをセット。
- */
-define('LIBPATH', realpath(APPPATH.'libs/').DIRECTORY_SEPARATOR);
-
-
-
-/**
- * ライブラリーまでのパスをセット。
+ * コアファイルまでのパスをセット。
  */
 define('COREPATH', realpath(__DIR__.'/../../libs/tamoframe/core/').DIRECTORY_SEPARATOR);
 
 
 
 /**
- * ソースファイルまでのパスをセット。
+ * Appのパスをセット。
  */
-define('SRCPATH', realpath(__DIR__.'/../../libs/tamoframe/app/action/').DIRECTORY_SEPARATOR);
+define('APPPATH', realpath(__DIR__.'/../../libs/tamoframe/app/').DIRECTORY_SEPARATOR);
+
+
+
+/**
+ * Libsのパスをセット。
+ */
+define('LIBPATH', APPPATH.'libs'.DIRECTORY_SEPARATOR);
+
+
+
+/**
+ * ACTIONまでのパスをセット。
+ */
+define('ACTIONPATH', APPPATH.'action'.DIRECTORY_SEPARATOR);
+
+
+
+/**
+ * MODELまでのパスをセット。
+ */
+define('MODELPATH', APPPATH.'model'.DIRECTORY_SEPARATOR);
 
 
 
@@ -68,15 +75,17 @@ defined('START_MEM')  or define('START_MEM', memory_get_usage());
  * オートロード開始。
  */
 require_once COREPATH . 'autoloader.php';
-new AutoLoader();
+\TamoFrame\Core\AutoLoader::register();
 
 
 
 /**
  * リクエストをルーティング
  */
-$reqObj = new request();
-$reqObj->executeRequest()->response();
+try {
+    $reqest = new \TamoFrame\Core\Request();
+    $reqest->executeRequest()->response();
 
-
-
+} catch (Exception $e) {
+    echo nl2br($e);
+}

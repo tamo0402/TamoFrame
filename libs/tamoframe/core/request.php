@@ -12,7 +12,10 @@
  * @copyright  2012 tamo All Rights Reserved.
  * @link       http://tamo3.info
  */
-class request {
+namespace TamoFrame\Core;
+
+
+class Request {
 
     private $url; // リクエストURL。
     private $fileName;   // 実行するclass名。
@@ -35,14 +38,8 @@ class request {
      * 以降はどちらもページを表示する処理。
      */
     public function executeRequest() {
-        try {
-            $this->setParams();
-            return $this->call();
-
-        } catch (Exception $e) {
-            echo "error!!";
-            echo $e;
-        }
+        $this->setParams();
+        return $this->call();
     }
 
 
@@ -90,41 +87,31 @@ class request {
      */
     private function call() {
 
-        try {
-            // ファイルが存在するかチェック。
-            if (is_file($this->fileName . ".php") === false) {
+        // ファイルが存在するかチェック。
+        if (is_file($this->fileName . ".php") === false) {
 
-                // ファイルがなければ404エラークラスを実行するようにセット。
-                $this->fileName = "error404";
-                $this->methodName = "index";
-            }
-
-            // ファイル名からアクション名（クラス名をセット）
-            $actionName = $this->fileName . "_action";
-
-            // コアのアクション読み込み。
-            require_once LIBPATH . 'action.php';
-
-            // アクションをnewする。
-            $obj = new $actionName();
-
-            // このクラスに指定したメソッドがあるかチェック。
-            if (method_exists($obj, $this->methodName) === false) {
-                // なければエラー。
-                throw new Exception("this method {$this->methodName} is missing.");
-            }
-
-            // メソッドを実行する。
-            $methodName = $this->methodName;
-            $obj->$methodName();
-
-            // オブジェクトを返す。
-            return $obj;
-
-        } catch (Exception $e) {
-
-            // ブン投げる。
-            throw $e;
+            // ファイルがなければ404エラークラスを実行するようにセット。
+            $this->fileName = "error404";
+            $this->methodName = "index";
         }
+
+        // ファイル名からアクション名（クラス名をセット）
+        $actionName = $this->fileName . "_action";
+
+        // アクションをnewする。
+        $obj = new $actionName();
+
+        // このクラスに指定したメソッドがあるかチェック。
+        if (method_exists($obj, $this->methodName) === false) {
+            // なければエラー。
+            throw new Exception("this method {$this->methodName} is missing.");
+        }
+
+        // メソッドを実行する。
+        $methodName = $this->methodName;
+        $obj->$methodName();
+
+        // オブジェクトを返す。
+        return $obj;
     }
 }

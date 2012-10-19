@@ -3,9 +3,8 @@
 /**
  * Tamo Frame - config.php -
  *
- * コアのコンフィグクラス。
- * デフォルトの設定を書く。
- * 変更する場合はappごとのコンフィグクラスで書きかえる。
+ * 設定クラス。
+ * 自分の変更に変更する。
  *
  * @version    1.0
  * @author     tamo
@@ -14,22 +13,32 @@
  * @link       http://tamo3.info
  */
 
-namespace Tamo\Core;
+class Config {
 
-class config {
+    private static $configs = null;
 
-	private $config;
+    /**
+     * コンストラクタ。
+     * 設定をセットする。
+     */
+    private function __construct() {
+        self::$configs = require_once LIBPATH.'config.php';
+    }
 
-	public function __construct() {
-		$this->config = $this->getConfig();
-	}
 
-	private function getConfig() {
-		// 設定。
+    /**
+     * 設定を取得する。
+     */
+    public static function get($key) {
 
-	}
+        if (self::$configs == null) {
+            new self();
+        }
+        return self::$configs[$key];
+    }
 
-	public static function get() {
-		return $this->config;
-	}
+
+    public final function __clone() {
+        throw new RuntimeException('Singletonパターンの為、cloneキーワードの使用は禁止されています。');
+    }
 }
