@@ -6,7 +6,7 @@
 随時追加していく。
 
 ## 機能
-PHP5
+PHP5.3以上
 Twig OR Smarty3 OR 素で
 MYSQL
 で動く予定。
