@@ -13,13 +13,9 @@
  * @link       http://tamo3.info
  */
 
-class Action {
+class ActionCore extends \TamoFrame\Core\ActionBase {
 
-    public $view;
-    private $viewName;
-    private $assignList = array();
     protected $sessionObj;
-
 
     /**
      * 子クラスのコンストラクタから呼び出す。
@@ -27,10 +23,6 @@ class Action {
      */
     public function __construct() {
 
-        /**
-         * クリックジャギング対策。
-         */
-        header('X-FRAME-OPTIONS: SAMEORIGIN');
 
 
         /**
@@ -42,11 +34,11 @@ class Action {
         /**
          * viewクラス。
          */
-        if (\config::get("view") == "Twig") {
-            $twig = new \TamoFrame\App\Lib\twig();
+        if (\Config::get("view") == "Twig") {
+            $twig = new \TamoFrame\Core\Twig();
             $this->view = $twig->getTwig();
 
-        } else if (\config::get("view") == "Smarty") {
+        } else if (\Config::get("view") == "Smarty") {
             $this->view = new \TamoFrame\App\Lib\smarty();
         }
 
@@ -54,19 +46,19 @@ class Action {
         /**
          * セッションクラス。
          */
-        $this->sessionObj = new \session();
+        $this->sessionObj = new \TamoFrame\Core\Session();
 
 
         /**
          * 現在の環境を設定。
          */
-        $modeObj = new \environment(\config::get("status"));
+        $modeObj = new \TamoFrame\Core\Environment(\Config::get("status"));
 
 
         /**
          * エラー系を扱うクラスのオブジェクト。
          */
-        $errorObj = new \errors();
+        $errorObj = new \TamoFrame\Core\Errors();
 
 
         /**
@@ -79,7 +71,7 @@ class Action {
         /**
          * logクラス。
          */
-        if ("none" != \config::get("log")) {
+        if ("none" != \Config::get("log")) {
             $logObj = new log();
         }
 
@@ -117,10 +109,10 @@ class Action {
     public function response() {
 
         try {
-            if ("Twig" == \config::get("view")) {
+            if ("Twig" == \Config::get("view")) {
                 $template = $this->view->loadTemplate($this->viewName);
                 echo $template->render($this->assignList);
-            } else if ("Smarty" == \config::get("view")) {
+            } else if ("Smarty" == \Config::get("view")) {
                 $this->view->display($this->viewName);
             }
 
@@ -137,10 +129,10 @@ class Action {
      */
     public function assign($key, $value) {
 
-        if ("Twig" == \config::get("view")) {
+        if ("Twig" == \Config::get("view")) {
             $this->twigAssign($key, $value);
             return;
-        } else if ("Smarty" == \config::get("view")) {
+        } else if ("Smarty" == \Config::get("view")) {
             $this->smartyAssign($key, $value);
             return;
         }

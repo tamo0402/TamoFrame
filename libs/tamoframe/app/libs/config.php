@@ -42,7 +42,7 @@ return array(
      * 3 : $test
      * 4 : $mentenance
      */
-    "status" => environment::$develop,
+    "status" => \TamoFrame\Core\environment::$develop,
 
 
 
