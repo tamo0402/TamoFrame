@@ -13,25 +13,16 @@
  * @link       http://tamo3.info
  */
 
-class Action {
+class ActionCore extends \TamoFrame\Core\ActionBase {
 
-    public $view;
-    private $viewName;
-    private $assignList = array();
     protected $sessionObj;
-
+    private $folder;
 
     /**
      * 子クラスのコンストラクタから呼び出す。
      * ここには自動的に毎回処理(初期設定)の内容を書く
      */
     public function __construct() {
-
-        /**
-         * クリックジャギング対策。
-         */
-        header('X-FRAME-OPTIONS: SAMEORIGIN');
-
 
         /**
          * PDOコネクションを用意する。
@@ -42,31 +33,31 @@ class Action {
         /**
          * viewクラス。
          */
-        if (\config::get("view") == "Twig") {
-            $twig = new \TamoFrame\App\Lib\twig();
+        if (\Config::get("view") == "Twig") {
+            $twig = new \TamoFrame\Core\Twig($this->folder);
             $this->view = $twig->getTwig();
 
-        } else if (\config::get("view") == "Smarty") {
-            $this->view = new \TamoFrame\App\Lib\smarty();
+        } else if (\Config::get("view") == "Smarty") {
+            $this->view = new \TamoFrame\Core\smarty($this->folder);
         }
 
 
         /**
          * セッションクラス。
          */
-        $this->sessionObj = new \session();
+        $this->sessionObj = new \TamoFrame\Core\Session();
 
 
         /**
          * 現在の環境を設定。
          */
-        $modeObj = new \environment(\config::get("status"));
+        $modeObj = new \TamoFrame\Core\Environment(\Config::get("status"));
 
 
         /**
          * エラー系を扱うクラスのオブジェクト。
          */
-        $errorObj = new \errors();
+        $errorObj = new \TamoFrame\Core\Errors();
 
 
         /**
@@ -79,7 +70,7 @@ class Action {
         /**
          * logクラス。
          */
-        if ("none" != \config::get("log")) {
+        if ("none" != \Config::get("log")) {
             $logObj = new log();
         }
 
@@ -117,10 +108,10 @@ class Action {
     public function response() {
 
         try {
-            if ("Twig" == \config::get("view")) {
+            if ("Twig" == \Config::get("view")) {
                 $template = $this->view->loadTemplate($this->viewName);
                 echo $template->render($this->assignList);
-            } else if ("Smarty" == \config::get("view")) {
+            } else if ("Smarty" == \Config::get("view")) {
                 $this->view->display($this->viewName);
             }
 
@@ -137,10 +128,10 @@ class Action {
      */
     public function assign($key, $value) {
 
-        if ("Twig" == \config::get("view")) {
+        if ("Twig" == \Config::get("view")) {
             $this->twigAssign($key, $value);
             return;
-        } else if ("Smarty" == \config::get("view")) {
+        } else if ("Smarty" == \Config::get("view")) {
             $this->smartyAssign($key, $value);
             return;
         }
@@ -212,5 +203,14 @@ class Action {
     public function gotoError($errorFlg) {
         $url = "error.php?flg={$errorFlg}";
         $this->gotoPage($url);
+    }
+
+
+
+    /**
+     * フォルダを作成し、その中にactionがある場合のフォルダをセット。
+     */
+    public function setFolder($folder) {
+        $this->folder = $folder;
     }
 }

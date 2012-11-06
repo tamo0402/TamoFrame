@@ -1,4 +1,6 @@
 <?php
+namespace TamoFrame\Core;
+
 
 class Errors {
 

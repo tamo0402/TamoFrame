@@ -62,8 +62,6 @@ class AutoLoader {
             $fileName = str_replace("_action", "", end($parts));
             $file = $dir . strtolower($fileName) . '.php';
 
-            echo $file, "<br>";
-
             // ファイルがあれば読み込む。
             if(is_readable($file)) {
                 require $file;
