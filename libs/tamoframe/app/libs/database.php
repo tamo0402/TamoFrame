@@ -17,7 +17,7 @@ class Database {
 
 	// DB接続に必要な情報を入れる。
     protected $serverName   = "localhost";
-    protected $serverId     = "tamo";
-    protected $serverPass   = "tamo0402";
-    protected $databaseName = "tamo3";
+    protected $serverId     = "serverid";
+    protected $serverPass   = "serverpass";
+    protected $databaseName = "dbname";
 }

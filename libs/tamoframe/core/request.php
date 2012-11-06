@@ -18,6 +18,7 @@ namespace TamoFrame\Core;
 class Request {
 
     private $url; // リクエストURL。
+    private $folderName; // フォルダがあればフォルダ名。
     private $fileName;   // 実行するclass名。
     private $methodName; // 実行するメソッド名。
     private $hikisuu;    // メソッドに渡す引数。
@@ -38,8 +39,23 @@ class Request {
      * 以降はどちらもページを表示する処理。
      */
     public function executeRequest() {
-        $this->setParams();
-        return $this->call();
+        try {
+            $this->setParams();
+        } catch (Exception $e) {
+            echo "rrrrrrrrrrrrrrrrrrrrrrrrrr";
+            // errorAction
+            $obj = new Error404_action();
+            $obj->index();
+            $obj->assign("errorMsg", $e->getMessage());
+            return $obj;
+        }
+
+        try {
+            return $this->call();
+        } catch (Exception $e) {
+            echo "eeeeeeeeeeeeeeeeeeeee";
+            throw $e;
+        }
     }
 
 
@@ -56,25 +72,68 @@ class Request {
         // 最初の空を取り除く。
         $urlList  = explode('/', $this->url, 2);
 
-        // ファイル指定あるか。
+        // ドメイン以降にURLがあるか。
         if (isset($urlList[1]) && $urlList[1] != "") {
 
-            // あればファイル名をセット。
-            $fileMethodList = explode('/', $urlList[1], 3);
-            $this->fileName = $fileMethodList[0];
+            // URLを分割。
+            $urlChk = explode('/', $urlList[1], 2);
 
-            // メソッド指定あるか。
-            if (isset($fileMethodList[1]) && $fileMethodList[1] != "") {
+            // ファイルがあるか。
+            if (is_file(ACTIONPATH.$urlChk[0].".php")) {
 
-                // あればメソッド名と引数をセット。
-                $this->methodName = $fileMethodList[1];
-                if (isset($fileMethodList[2]) && $fileMethodList[2] != "") {
-                    $this->hikisuu = implode(",", explode("/", $fileMethodList[2]));
+                // ファイル名セット。
+                $fileMethodList = explode('/', $urlList[1], 3);
+                $this->fileName = $fileMethodList[0];
+
+                // メソッド指定あるか。
+                if (isset($fileMethodList[1]) && $fileMethodList[1] != "") {
+                    $this->methodName = $fileMethodList[1];
+
+                } else if (is_dir(ACTIONPATH.$urlChk[0])) {
+
+                    // ディレクトリがある場合。
+                    $fileMethodList = explode('/', $urlList[1], 4);
+                    $this->folderName = $fileMethodList[0];
+
+                    // メソッド指定あるか。
+                    if (isset($fileMethodList[1]) && $fileMethodList[1] != "") {
+
+                        // あればメソッド名と引数をセット。
+                        $this->methodName = $fileMethodList[1];
+                        if (isset($fileMethodList[2]) && $fileMethodList[2] != "") {
+                            $this->hikisuu = implode(",", explode("/", $fileMethodList[2]));
+                        }
+
+                    } else {
+                        throw new \ErrorException("method is missing...");
+                    }
                 }
+
+            } else if (is_dir(ACTIONPATH.$urlChk[0])) {
+
+                // ディレクトリがある場合。
+                $fileMethodList = explode('/', $urlList[1], 4);
+                $this->folderName = $fileMethodList[0];
+
+                // メソッド指定あるか。
+                if (isset($fileMethodList[1]) && $fileMethodList[1] != "") {
+
+                    // あればメソッド名と引数をセット。
+                    $this->methodName = $fileMethodList[1];
+
+                    if (isset($fileMethodList[2]) && $fileMethodList[2] != "") {
+                        $this->hikisuu = implode(",", explode("/", $fileMethodList[2]));
+                    }
+
+                } else {
+                    throw new \Exception("method is missing...");
+                }
+
+            } else {
+                throw new \Exception("file is missing...");
             }
         }
     }
-
 
 
 
@@ -83,33 +142,35 @@ class Request {
      * 実行するとViewオブジェクトが返ってくるので、
      * それを使用してViewを呼び出す。
      * errorがあった場合はここでキャッチする？
-     * TODO errorを配列にするかExceptionにするか。
      */
     private function call() {
 
-        // ファイルが存在するかチェック。
-        if (is_file($this->fileName . ".php") === false) {
+        try {
+            // ファイル名からアクション名（クラス名をセット）
+            $actionName = $this->fileName . "_action";
 
-            // ファイルがなければ404エラークラスを実行するようにセット。
-            $this->fileName = "error404";
-            $this->methodName = "index";
+            // アクションをnewする。
+            if ($this->folderName != "") {
+                require_once ACTIONPATH.$this->folderName."/".$this->fileName.".php";
+                $obj = new $actionName();
+                $obj->setFolder($this->folderName);
+            } else {
+                $obj = new $actionName();
+            }
+            // このクラスに指定したメソッドがあるかチェック。
+            if (method_exists($obj, $this->methodName) === false) {
+                // なければエラー。
+                throw new \Exception("this method {$this->methodName} is missing.");
+            }
+
+            // メソッドを実行する。
+            $methodName = $this->methodName;
+            $obj->$methodName();
+
+        } catch (Exception $e) {
+            echo "gggggggggggggg";
+            throw $e;
         }
-
-        // ファイル名からアクション名（クラス名をセット）
-        $actionName = $this->fileName . "_action";
-
-        // アクションをnewする。
-        $obj = new $actionName();
-
-        // このクラスに指定したメソッドがあるかチェック。
-        if (method_exists($obj, $this->methodName) === false) {
-            // なければエラー。
-            throw new Exception("this method {$this->methodName} is missing.");
-        }
-
-        // メソッドを実行する。
-        $methodName = $this->methodName;
-        $obj->$methodName();
 
         // オブジェクトを返す。
         return $obj;

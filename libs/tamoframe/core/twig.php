@@ -10,11 +10,15 @@ class Twig {
 	public $twig;
 
 	// classにする意味あんまないな。
-	public function __construct() {
+	public function __construct($addPath) {
 
 		\Twig_Autoloader::register();
 
-		$loader = new \Twig_Loader_Filesystem(APPPATH . 'view/');
+		if ($addPath != "") {
+    		$loader = new \Twig_Loader_Filesystem(APPPATH.$addPath.'/view/');
+		} else {
+		    $loader = new \Twig_Loader_Filesystem(APPPATH.'view/');
+		}
 
 		// extension
 		$escaper = new \Twig_Extension_Escaper(true);
