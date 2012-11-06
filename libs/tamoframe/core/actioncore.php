@@ -16,14 +16,13 @@
 class ActionCore extends \TamoFrame\Core\ActionBase {
 
     protected $sessionObj;
+    private $folder;
 
     /**
      * 子クラスのコンストラクタから呼び出す。
      * ここには自動的に毎回処理(初期設定)の内容を書く
      */
     public function __construct() {
-
-
 
         /**
          * PDOコネクションを用意する。
@@ -35,11 +34,11 @@ class ActionCore extends \TamoFrame\Core\ActionBase {
          * viewクラス。
          */
         if (\Config::get("view") == "Twig") {
-            $twig = new \TamoFrame\Core\Twig();
+            $twig = new \TamoFrame\Core\Twig($this->folder);
             $this->view = $twig->getTwig();
 
         } else if (\Config::get("view") == "Smarty") {
-            $this->view = new \TamoFrame\App\Lib\smarty();
+            $this->view = new \TamoFrame\Core\smarty($this->folder);
         }
 
 
@@ -204,5 +203,14 @@ class ActionCore extends \TamoFrame\Core\ActionBase {
     public function gotoError($errorFlg) {
         $url = "error.php?flg={$errorFlg}";
         $this->gotoPage($url);
+    }
+
+
+
+    /**
+     * フォルダを作成し、その中にactionがある場合のフォルダをセット。
+     */
+    public function setFolder($folder) {
+        $this->folder = $folder;
     }
 }

@@ -11,12 +11,16 @@ class Smarty extends \Smarty {
     private $compileDir;
 
     /** 親クラスのコンストラクタを呼ぶ。 */
-    public function __construct() {
+    public function __construct($addPath) {
         parent::__construct();
 
         // コンストラクタで設定したものを使用する。
-        $this->template_dir = APPPATH . "view";
-        $this->compile_dir  = APPPATH . "cache";
+        if ($addPath != "") {
+            $this->template_dir = APPPATH.$addPath."/view";
+        } else {
+            $this->template_dir = APPPATH."view";
+        }
+        $this->compile_dir  = APPPATH."cache";
 
         // すべて共通の処理。
         $this->left_delimiter  = "{{";
