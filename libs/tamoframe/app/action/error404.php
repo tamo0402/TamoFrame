@@ -11,16 +11,14 @@
  * @copyright  2012 tamo All Rights Reserved.
  * @link       http://tamo3.info
  */
-namespace TamoFrame\Core;
-
 
 class Error404_action extends Action {
 
-	public function __construct() {
-		parent::__construct();
-	}
+    public function __construct() {
+        parent::__construct();
+    }
 
-	public function index() {
-		$this->viewSet('error404.html');
-	}
+    public function index() {
+        $this->viewSet('error404.html');
+    }
 }

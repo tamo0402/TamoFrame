@@ -47,9 +47,9 @@ class Request {
     public function executeRequest() {
         try {
             $this->setParams();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // errorAction
-            $obj = new Error404_action();
+            $obj = new \Error404_action();
             $obj->index();
             $obj->assign("errorMsg", $e->getMessage());
             return $obj;
@@ -57,7 +57,8 @@ class Request {
 
         try {
             return $this->call();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
+            echo "aaaa";
             throw $e;
         }
     }
