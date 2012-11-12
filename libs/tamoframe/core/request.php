@@ -18,6 +18,7 @@ namespace TamoFrame\Core;
 class Request {
 
     private $url; // リクエストURL。
+    private $getParams;  // $_GETのパラメーターあれば。
     private $folderName; // フォルダがあればフォルダ名。
     private $fileName;   // 実行するclass名。
     private $methodName; // 実行するメソッド名。
@@ -29,7 +30,12 @@ class Request {
      * リクエストURLをセット。
      */
     public function __construct() {
-        $this->url = $_SERVER['REQUEST_URI'];
+        $url  = $_SERVER['REQUEST_URI'];
+        $urls = explode("?", $url);
+        $this->url = $urls[0];
+        if (isset($urls[1])) {
+            $this->getParams = $urls[1];
+        }
     }
 
 
@@ -42,7 +48,6 @@ class Request {
         try {
             $this->setParams();
         } catch (Exception $e) {
-            echo "rrrrrrrrrrrrrrrrrrrrrrrrrr";
             // errorAction
             $obj = new Error404_action();
             $obj->index();
@@ -53,7 +58,6 @@ class Request {
         try {
             return $this->call();
         } catch (Exception $e) {
-            echo "eeeeeeeeeeeeeeeeeeeee";
             throw $e;
         }
     }
@@ -62,6 +66,7 @@ class Request {
 
     /**
      * URLを分解してセットする。
+     * TODO とりあえず動くようにしただけなのであとでいい感じにまとめる。
      */
     private function setParams() {
 
@@ -89,6 +94,11 @@ class Request {
                 if (isset($fileMethodList[1]) && $fileMethodList[1] != "") {
                     $this->methodName = $fileMethodList[1];
 
+                    // あればメソッド名と引数をセット。
+                    if (isset($fileMethodList[2]) && $fileMethodList[2] != "") {
+                        $this->hikisuu = explode("/", urldecode($fileMethodList[2]));
+                    }
+
                 } else if (is_dir(ACTIONPATH.$urlChk[0])) {
 
                     // ディレクトリがある場合。
@@ -101,7 +111,7 @@ class Request {
                         // あればメソッド名と引数をセット。
                         $this->methodName = $fileMethodList[1];
                         if (isset($fileMethodList[2]) && $fileMethodList[2] != "") {
-                            $this->hikisuu = implode(",", explode("/", $fileMethodList[2]));
+                            $this->hikisuu = explode("/", $fileMethodList[2]);
                         }
 
                     } else {
@@ -122,7 +132,7 @@ class Request {
                     $this->methodName = $fileMethodList[1];
 
                     if (isset($fileMethodList[2]) && $fileMethodList[2] != "") {
-                        $this->hikisuu = implode(",", explode("/", $fileMethodList[2]));
+                        $this->hikisuu = explode("/", $fileMethodList[2]);
                     }
 
                 } else {
@@ -138,10 +148,8 @@ class Request {
 
 
     /**
-     * class（メソッド）を実行する。
-     * 実行するとViewオブジェクトが返ってくるので、
-     * それを使用してViewを呼び出す。
-     * errorがあった場合はここでキャッチする？
+     * ルーティングされたメソッドを実行する。
+     * @return 実行するクラスのオブジェクトを返す。
      */
     private function call() {
 
@@ -163,16 +171,38 @@ class Request {
                 throw new \Exception("this method {$this->methodName} is missing.");
             }
 
+            // $_GETの値をセットする。
+            if (isset($this->getParams)) {
+                $this->setGetParams();
+            }
+
             // メソッドを実行する。
             $methodName = $this->methodName;
-            $obj->$methodName();
+
+            if (count($this->hikisuu) != 0) {
+                call_user_func_array(array($obj,$methodName), $this->hikisuu);
+            } else {
+                $obj->$methodName();
+            }
 
         } catch (Exception $e) {
-            echo "gggggggggggggg";
             throw $e;
         }
-
         // オブジェクトを返す。
         return $obj;
+    }
+
+
+
+    /**
+     * $_GETのパラメーターがあった場合$_GETにkey=>valueでセットする。
+     * // TODO 名前きもい。
+     */
+    private function setGetParams() {
+        $params = explode("&", $this->getParams);
+        foreach ($params as $param) {
+            $keyValue = explode("=", $param);
+            $_GET[$keyValue[0]] = urldecode($keyValue[1]);
+        }
     }
 }
