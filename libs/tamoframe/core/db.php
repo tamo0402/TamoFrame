@@ -30,7 +30,7 @@ class Db extends \Database {
     /**
      * コネクションを作成する。
      */
-    public function connection() {
+    public static function connection() {
         new self();
     }
 
