@@ -13,10 +13,13 @@
  * @link       http://tamo3.info
  */
 
-class ActionCore extends \TamoFrame\Core\ActionBase {
+class ActionCore implements \TamoFrame\Core\ActionBase {
 
-    protected $sessionObj;
+    public $view;
+    private $viewName;
+    private $assignList = array();
     private $folder;
+    protected $sessionObj;
 
     /**
      * 子クラスのコンストラクタから呼び出す。
@@ -137,27 +140,6 @@ class ActionCore extends \TamoFrame\Core\ActionBase {
         }
     }
 
-
-    /**
-     * Twig使用時viewに変数登録。
-     * @param $key
-     * @param $value
-     */
-    private function twigAssign($key, $value) {
-        $this->assignList[$key] = $value;
-    }
-
-
-    /**
-     * Smarty使用時viewに変数登録。
-     * @param $key
-     * @param $value
-     */
-    private function smartyAssign($key, $value) {
-        $this->view->assign($key, $value);
-    }
-
-
     /**
      * view名をセットする。
      * @param unknown $viewName
@@ -184,6 +166,32 @@ class ActionCore extends \TamoFrame\Core\ActionBase {
         }
         return false;
     }
+
+// -------------------------------------------------------------------------------------
+// TODO この二つ絶対いるメソッドやけどprivateやからインターフェイスに入れてない。
+// TODO どーしよ？
+
+    /**
+     * Twig使用時viewに変数登録。
+     * @param $key
+     * @param $value
+     */
+    private function twigAssign($key, $value) {
+        $this->assignList[$key] = $value;
+    }
+
+
+
+    /**
+     * Smarty使用時viewに変数登録。
+     * @param $key
+     * @param $value
+     */
+    private function smartyAssign($key, $value) {
+        $this->view->assign($key, $value);
+    }
+
+//----------------------------------------------------------------------------------
 
 
     /**
