@@ -18,9 +18,14 @@ class Index_action extends Action {
      */
     public function index() {
 
-        // DB操作する時。
-        //$memberDao = new member();
-        //print_r($memberDao->getAllData());
+        // DB操作する時はこんな感じかな？
+        //try {
+        //    $memberDao = new member();
+        //    $retData = $memberDao->getAllData());
+        //    print_r($retData);
+        //} catch (PDOException $e) {
+        //    throw $e;
+        //}
 
         $this->assign("title", "TamoFrame | index");
         $this->assign("name", "World!!");

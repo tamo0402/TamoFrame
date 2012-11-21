@@ -108,7 +108,11 @@ class Member extends \TamoFrame\Core\dao {
 	 * @return array データ。
 	 */
     public function getAllData() {
-        return $this -> executeSql("SELECT * FROM member");
+        try {
+            return $this -> executeSql("SELECT * FROM member");
+        } catch (PDOException $e) {
+            throw $e;
+        }
     }
 
 

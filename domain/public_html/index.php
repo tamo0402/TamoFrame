@@ -83,8 +83,12 @@ require_once COREPATH . 'autoloader.php';
  * リクエストをルーティング
  */
 try {
-    // PHP5.4以上？
-    (new \TamoFrame\Core\Request())->executeRequest()->response();
+    // PHP5.4以上ならこっちで
+    //(new \TamoFrame\Core\Request())->executeRequest()->response();
+
+    // PHP5.3
+    $request = new \TamoFrame\Core\Request();
+    $request->executeRequest()->response();
 
 } catch (Exception $e) {
     echo nl2br(htmlspecialchars($e, ENT_QUOTES, "utf-8"));
