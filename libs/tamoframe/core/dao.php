@@ -22,7 +22,7 @@ class Dao {
 
 
     public function __construct() {
-        $this->con = \Db::get();
+        $this->con = Db::get();
     }
 
 
