@@ -23,6 +23,7 @@ class Db extends \Database {
         if (is_null(self::$con)) {
             self::$con = new \PDO("mysql:host=" . $this->serverName . "; dbname=" . $this->databaseName, $this->serverId, $this->serverPass);
             self::$con->query("SET NAMES utf-8;");
+            self::$con->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         }
     }
 
