@@ -16,11 +16,45 @@ namespace TamoFrame\Core;
 
 class session {
 
+    private $sessionParam = array();
+
 	/**
 	 * コンストラクタでセッション開始。
 	 */
 	public function __construct() {
 		session_start();
+	}
+
+
+	/**
+	 * セッションをセットする。
+	 */
+	public function set() {
+
+	}
+
+	/**
+	 * セッションをセットする。
+	 */
+	public function set_flash() {
+
+	}
+
+
+	/**
+	 * セッションを削除する。
+	 */
+	public function clear($key=null) {
+
+	    if (null == $key) {
+            $this->sessionParam = array();
+            $_SESSION = array();
+            return ;
+	    }
+	    // key指定で削除。
+	    if (array_key_exists($key, $this->sessionParam)) {
+    	    unset($this->sessionParam[$key]);
+	    }
 	}
 
 
@@ -36,6 +70,7 @@ class session {
 
 			// 名前指定がない場合はすべて削除。
 			$_SESSION = array();
+
 
 			if (isset($_COOKIE[session_name()])) {
     			setcookie(session_name(), '', time()-42000, '/');

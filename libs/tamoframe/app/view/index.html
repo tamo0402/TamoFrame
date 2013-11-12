@@ -1,7 +1,27 @@
-{% extends "base.html" %}
-{% block main %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title><?=$title;?></title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<link rel="shortcut icon" href="favicon.ico">
+<style type="text/css" media="all">
+@import url("css/import.css");
+</style>
+<!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+</head>
+<body>
+
+  <?php include(dirname(__FILE__).'/header.html'); ?>
+
+  <!-- contents start -->
+  <div id="main_container">
+
 <div>
-	Hello {{name}}!!
+	Hello!!
 </div>
 <div style="font-family: 'ＭＳＰ ゴシック','MS Pgothic',sans-serif,Verdana;">
 　　　　　　　　　__....-一‐''''''''''ー-..、<br>
@@ -27,4 +47,10 @@
 ;;;;;;;;;;;;;;;;;　＼ ∧　ヽ、__＿,,,,／/ 　 |;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;<br>
 
 </div>
-{% endblock %}
+</div><br /><br /><br /><br />
+<!-- contents end -->
+
+<?php include(dirname(__FILE__).'/footer.html'); ?>
+
+</body>
+</html>

@@ -6,12 +6,13 @@
  * すべてのリクエストで実行される。
  * パスの設定とか。
  *
- * @version    1.0
+ * @version    2.0
  * @author     tamo
  * @license    MIT License
- * @copyright  2012 tamo All Rights Reserved.
+ * @copyright  2013 tamo All Rights Reserved.
  * @link       http://tamo3.info
  */
+
 
 
 /**
@@ -31,43 +32,14 @@ define('DOCROOT', __DIR__.DIRECTORY_SEPARATOR);
 /**
  * コアファイルまでのパスをセット。
  */
-define('COREPATH', realpath(__DIR__.'/../../libs/tamoframe/core/').DIRECTORY_SEPARATOR);
+define('COREPATH', realpath(__DIR__.'/../../tamolibs/core/').DIRECTORY_SEPARATOR);
 
 
 
 /**
  * Appのパスをセット。
  */
-define('APPPATH', realpath(__DIR__.'/../../libs/tamoframe/app/').DIRECTORY_SEPARATOR);
-
-
-
-/**
- * Libsのパスをセット。
- */
-define('LIBPATH', APPPATH.'libs'.DIRECTORY_SEPARATOR);
-
-
-
-/**
- * ACTIONまでのパスをセット。
- */
-define('ACTIONPATH', APPPATH.'action'.DIRECTORY_SEPARATOR);
-
-
-
-/**
- * MODELまでのパスをセット。
- */
-define('MODELPATH', APPPATH.'model'.DIRECTORY_SEPARATOR);
-
-
-
-/**
- * 時間とメモリーをセット。
- */
-defined('START_TIME') or define('START_TIME', microtime(true));
-defined('START_MEM')  or define('START_MEM', memory_get_usage());
+define('APPPATH', realpath(__DIR__.'/../../tamolibs/app/').DIRECTORY_SEPARATOR);
 
 
 
@@ -80,12 +52,10 @@ require_once COREPATH . 'autoloader.php';
 
 
 /**
- * リクエストをルーティング
+ * リクエストを実行。
  */
 try {
-    // PHP5.4以上？
-    (new \TamoFrame\Core\Request())->executeRequest()->response();
-
+    \TamoFrame\Core\Request::execute()->call()->display();
 } catch (Exception $e) {
     echo nl2br(htmlspecialchars($e, ENT_QUOTES, "utf-8"));
 }

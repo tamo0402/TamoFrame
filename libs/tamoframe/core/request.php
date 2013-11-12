@@ -6,10 +6,10 @@
  * すべてのリクエストで実行される。
  * リクエストURLのクラスを実行する。
  *
- * @version    1.0
+ * @version    2.0
  * @author     tamo
  * @license    MIT License
- * @copyright  2012 tamo All Rights Reserved.
+ * @copyright  2013 tamo All Rights Reserved.
  * @link       http://tamo3.info
  */
 namespace TamoFrame\Core;
@@ -20,8 +20,8 @@ class Request {
     private $url; // リクエストURL。
     private $getParams;  // $_GETのパラメーターあれば。
     private $folderName; // フォルダがあればフォルダ名。
-    private $fileName;   // 実行するclass名。
-    private $methodName; // 実行するメソッド名。
+    private $fileName   = 'index'; // 実行するclass名。
+    private $methodName = 'index'; // 実行するメソッド名。
     private $hikisuu;    // メソッドに渡す引数。
 
 
@@ -29,38 +29,35 @@ class Request {
      * コンストラクタ
      * リクエストURLをセット。
      */
-    public function __construct() {
-        $url  = $_SERVER['REQUEST_URI'];
+    private function __construct() {
+
+        // リクエストのURLを取得。
+        $url = trim($_SERVER['REQUEST_URI']);
+
+        // ?で分割する。
         $urls = explode("?", $url);
-        $this->url = $urls[0];
+        $this->url = $urls[0]; // ?の前URL
         if (isset($urls[1])) {
-            $this->getParams = $urls[1];
+            $this->getParams = $urls[1]; // ?の後URL
         }
+
+        // 各パラメーターをセットする。
+        try {
+            $this->setParams();
+
+        } catch (\Exception $e) {
+            // errorAction
+            $this->fileName   = 'error404';
+        }
+        return $this;
     }
 
 
     /**
-     * リクエストURLを実行する。
-     * 実行でエラーの場合はエラーページを実行しているので
-     * 以降はどちらもページを表示する処理。
+     * リクエストを実行。
      */
-    public function executeRequest() {
-        try {
-            $this->setParams();
-        } catch (\Exception $e) {
-            // errorAction
-            $obj = new \Error404_action();
-            $obj->index();
-            $obj->assign("errorMsg", $e->getMessage());
-            return $obj;
-        }
-
-        try {
-            return $this->call();
-        } catch (\Exception $e) {
-            echo "aaaa";
-            throw $e;
-        }
+    public static function execute() {
+        return new self();
     }
 
 
@@ -70,10 +67,6 @@ class Request {
      * TODO とりあえず動くようにしただけなのであとでいい感じにまとめる。
      */
     private function setParams() {
-
-        // デフォルトをセット。
-        $this->fileName = "index";
-        $this->methodName = "index";
 
         // 最初の空を取り除く。
         $urlList  = explode('/', $this->url, 2);
@@ -120,7 +113,7 @@ class Request {
                     }
                 }
 
-            } else if (is_dir(ACTIONPATH.$urlChk[0])) {
+            } else if (is_dir(APPPATH.'action/'.$urlChk[0])) {
 
                 // ディレクトリがある場合。
                 $fileMethodList = explode('/', $urlList[1], 4);
@@ -152,7 +145,9 @@ class Request {
      * ルーティングされたメソッドを実行する。
      * @return 実行するクラスのオブジェクトを返す。
      */
-    private function call() {
+    public function call() {
+
+        $viewObj = null;
 
         try {
             // ファイル名からアクション名（クラス名をセット）
@@ -181,16 +176,16 @@ class Request {
             $methodName = $this->methodName;
 
             if (count($this->hikisuu) != 0) {
-                call_user_func_array(array($obj,$methodName), $this->hikisuu);
+                $viewObj = call_user_func_array(array($obj,$methodName), $this->hikisuu);
             } else {
-                $obj->$methodName();
+                $viewObj = $obj->$methodName();
             }
 
         } catch (Exception $e) {
             throw $e;
         }
         // オブジェクトを返す。
-        return $obj;
+        return $viewObj;
     }
 
 

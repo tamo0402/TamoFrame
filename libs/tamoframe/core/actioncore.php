@@ -12,8 +12,9 @@
  * @copyright  2012 tamo All Rights Reserved.
  * @link       http://tamo3.info
  */
+namespace TamoFrame\Core;
 
-class ActionCore implements \TamoFrame\Core\ActionBase {
+class ActionCore {
 
     public $view;
     private $viewName;
@@ -30,52 +31,33 @@ class ActionCore implements \TamoFrame\Core\ActionBase {
         /**
          * PDOコネクションを用意する。
          */
-        \TamoFrame\Core\db::connection();
-
-
-        /**
-         * viewクラス。
-         */
-        if (\Config::get("view") == "Twig") {
-            $twig = new \TamoFrame\Core\Twig($this->folder);
-            $this->view = $twig->getTwig();
-
-        } else if (\Config::get("view") == "Smarty") {
-            $this->view = new \TamoFrame\Core\smarty($this->folder);
-        }
+        //\TamoFrame\Core\db::connection();
 
 
         /**
          * セッションクラス。
          */
-        $this->sessionObj = new \TamoFrame\Core\Session();
+        //$this->sessionObj = new \TamoFrame\Core\Session();
 
 
         /**
          * 現在の環境を設定。
          */
-        $modeObj = new \TamoFrame\Core\Environment(\Config::get("status"));
+        //$modeObj = new \TamoFrame\Core\Environment(\Config::get("status"));
 
 
         /**
          * エラー系を扱うクラスのオブジェクト。
          */
-        $errorObj = new \TamoFrame\Core\Errors();
+        //$errorObj = new \TamoFrame\Core\Errors();
 
 
-        /**
-         * loadクラス。
-         * パスを追加する。
-         */
-        //set_include_path(get_include_path() . PATH_SEPARATOR . $path);
-
-
-        /**
-         * logクラス。
-         */
-        if ("none" != \Config::get("log")) {
-            $logObj = new log();
-        }
+//         /**
+//          * logクラス。
+//          */
+//         if ("none" != \Config::get("log")) {
+//             $logObj = new log();
+//         }
 
 
         // 最後に子クラスのbeforを呼び出す。
@@ -103,51 +85,6 @@ class ActionCore implements \TamoFrame\Core\ActionBase {
     }
 
 
-    /**
-     * レスポンスを返す。
-     * とゆーかviewファイルを読み込む。
-     * Twig OR Smarty OR 素PHP
-     */
-    public function response() {
-
-        try {
-            if ("Twig" == \Config::get("view")) {
-                $template = $this->view->loadTemplate($this->viewName);
-                echo $template->render($this->assignList);
-            } else if ("Smarty" == \Config::get("view")) {
-                $this->view->display($this->viewName);
-            }
-
-        } catch (Exception $e) {
-            echo nl2br($e);
-        }
-    }
-
-
-    /**
-     * smartyの場合はそのまま、
-     * twigの場合は一時保存してviewSetで読み込む。
-     * TODO 配列で一気に対応させてもいいかも。
-     */
-    public function assign($key, $value) {
-
-        if ("Twig" == \Config::get("view")) {
-            $this->twigAssign($key, $value);
-            return;
-        } else if ("Smarty" == \Config::get("view")) {
-            $this->smartyAssign($key, $value);
-            return;
-        }
-    }
-
-    /**
-     * view名をセットする。
-     * @param unknown $viewName
-     */
-    public function viewSet($viewName) {
-        $this->viewName = $viewName;
-    }
-
 
     /**
      * トークン用にランダムな文字列を作成。
@@ -167,31 +104,6 @@ class ActionCore implements \TamoFrame\Core\ActionBase {
         return false;
     }
 
-// -------------------------------------------------------------------------------------
-// TODO この二つ絶対いるメソッドやけどprivateやからインターフェイスに入れてない。
-// TODO どーしよ？
-
-    /**
-     * Twig使用時viewに変数登録。
-     * @param $key
-     * @param $value
-     */
-    private function twigAssign($key, $value) {
-        $this->assignList[$key] = $value;
-    }
-
-
-
-    /**
-     * Smarty使用時viewに変数登録。
-     * @param $key
-     * @param $value
-     */
-    private function smartyAssign($key, $value) {
-        $this->view->assign($key, $value);
-    }
-
-//----------------------------------------------------------------------------------
 
 
     /**

@@ -1,9 +1,7 @@
 <?php
 
 // Modelで使うファイルを読み込む。
-// require_once APPPATH . 'model/member.php';
-
-class Index_action extends Action {
+class Index_action extends \Action {
 
     /**
      * 親クラスをnewする。
@@ -22,8 +20,8 @@ class Index_action extends Action {
         //$memberDao = new member();
         //print_r($memberDao->getAllData());
 
-        $this->assign("title", "TamoFrame | index");
-        $this->assign("name", "World!!");
-        $this->viewSet('index.html');
+        $data["title"] = "TamoFrame | index";
+        $data["name"]  = "World!!";
+        return \View::set("index.html", $data);
     }
 }
