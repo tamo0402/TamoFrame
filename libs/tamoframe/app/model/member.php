@@ -3,7 +3,7 @@
 
 /*
  * Created 2012/10/17
- *
+ * TODO 昔のままなので修正する。
  */
 
 class Member extends \TamoFrame\Core\dao {
@@ -108,7 +108,11 @@ class Member extends \TamoFrame\Core\dao {
 	 * @return array データ。
 	 */
     public function getAllData() {
-        return $this -> executeSql("SELECT * FROM member");
+        try {
+            return $this -> executeSql("SELECT * FROM member");
+        } catch (PDOException $e) {
+            throw $e;
+        }
     }
 
 

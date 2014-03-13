@@ -20,6 +20,8 @@
  */
 ini_set('display_errors', 1);
 
+session_start();
+
 
 
 /**
@@ -32,14 +34,14 @@ define('DOCROOT', __DIR__.DIRECTORY_SEPARATOR);
 /**
  * コアファイルまでのパスをセット。
  */
-define('COREPATH', realpath(__DIR__.'/../../tamolibs/core/').DIRECTORY_SEPARATOR);
+define('COREPATH', realpath(__DIR__.'/tamoframe/core/').DIRECTORY_SEPARATOR);
 
 
 
 /**
  * Appのパスをセット。
  */
-define('APPPATH', realpath(__DIR__.'/../../tamolibs/app/').DIRECTORY_SEPARATOR);
+define('APPPATH', realpath(__DIR__.'/tamoframe/app/').DIRECTORY_SEPARATOR);
 
 
 

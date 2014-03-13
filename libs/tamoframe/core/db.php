@@ -21,7 +21,7 @@ class Db extends \Database {
 
     private function __construct() {
         if (is_null(self::$con)) {
-            self::$con = new \PDO("mysql:host=" . $this->serverName . "; dbname=" . $this->databaseName, $this->serverId, $this->serverPass);
+            self::$con = new \PDO("mysql:host=" . $this->serverName . ";charset=utf8; dbname=" . $this->databaseName, $this->serverId, $this->serverPass);
             self::$con->query("SET NAMES utf-8;");
         }
     }

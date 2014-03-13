@@ -47,6 +47,7 @@ class Request {
 
         } catch (\Exception $e) {
             // errorAction
+            $this->folderName = 'errors';
             $this->fileName   = 'error404';
         }
         return $this;
@@ -78,7 +79,7 @@ class Request {
             $urlChk = explode('/', $urlList[1], 2);
 
             // ファイルがあるか。
-            if (is_file(ACTIONPATH.$urlChk[0].".php")) {
+            if (is_file(APPPATH."action/".$urlChk[0].".php")) {
 
                 // ファイル名セット。
                 $fileMethodList = explode('/', $urlList[1], 3);
@@ -93,7 +94,7 @@ class Request {
                         $this->hikisuu = explode("/", urldecode($fileMethodList[2]));
                     }
 
-                } else if (is_dir(ACTIONPATH.$urlChk[0])) {
+                } else if (is_dir(APPPATH."action/".$urlChk[0])) {
 
                     // ディレクトリがある場合。
                     $fileMethodList = explode('/', $urlList[1], 4);
@@ -155,9 +156,15 @@ class Request {
 
             // アクションをnewする。
             if ($this->folderName != "") {
-                require_once ACTIONPATH.$this->folderName."/".$this->fileName.".php";
-                $obj = new $actionName();
-                $obj->setFolder($this->folderName);
+                if ($this->fileName == 'error404') {
+                	require_once APPPATH."action/".$this->folderName."/404/".$this->fileName.".php";
+                	$obj = new $actionName();
+                	$obj->setFolder($this->folderName);
+                } else {
+            				require_once APPPATH."action/".$this->folderName."/".$this->fileName.".php";
+                		$obj = new $actionName();
+                		$obj->setFolder($this->folderName);
+                }
             } else {
                 $obj = new $actionName();
             }

@@ -79,18 +79,15 @@ class ActionCore {
     /**
      * 子クラスでオーバーライドして使う。
      */
-    public function befor() {
-    }
-    public function after() {
-    }
-
+    public function befor() {}
+    public function after() {}
 
 
     /**
      * トークン用にランダムな文字列を作成。
      */
     public function generate() {
-        return $_SESSION["syamrock"]["token"] = sha1(uniqid(mt_rand(), true));
+        return $_SESSION["tamoframe_security"]["token"] = sha1(uniqid(mt_rand(), true));
     }
 
 
@@ -98,7 +95,7 @@ class ActionCore {
      * トークンが一致しているかチェック。
      */
     public function checkToken($postToken) {
-        if ($_SESSION["syamrock"]["token"] === $postToken) {
+        if ($_SESSION["tamoframe_security"]["token"] === $postToken) {
             return true;
         }
         return false;

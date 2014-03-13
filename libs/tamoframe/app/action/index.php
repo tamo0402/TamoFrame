@@ -1,27 +1,12 @@
 <?php
 
 // Modelで使うファイルを読み込む。
-class Index_action extends \Action {
+// require_once APPPATH . 'model/member.php';
 
-    /**
-     * 親クラスをnewする。
-     */
-    public function __construct() {
-        parent::__construct();
-    }
-
-
-    /**
-     * indexが呼ばれた時。
-     */
+class Index_action extends Action {
     public function index() {
-
-        // DB操作する時。
-        //$memberDao = new member();
-        //print_r($memberDao->getAllData());
-
-        $data["title"] = "TamoFrame | index";
-        $data["name"]  = "World!!";
+    	  $data["title"] = "hello word!!";
+        $data["token"] = $this->generate();
         return \View::set("index.html", $data);
     }
 }

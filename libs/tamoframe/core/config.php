@@ -13,6 +13,8 @@
  * @link       http://tamo3.info
  */
 
+namespace TamoFrame\Core;
+
 class Config {
 
     private static $configs = null;
